@@ -29,6 +29,8 @@ class Game:
         pygame.init()
         self.clock = pygame.time.Clock()
         self.rend = Renderer()
+        self.rend.quitButton.method = self.quit_method
+        self.rend.playButton.method = self.enter_to_lobby
         self.buttons.append(self.rend.quitButton)
         self.buttons.append(self.rend.playButton)
 
@@ -79,14 +81,9 @@ class Game:
                 return True
         return False
 
-
-    def check_cursor_hover(self, cursor_pos):
-        for button in self.buttons:
-            if cursor_pos[0] < button.X or cursor_pos[0] > button.X + button.xsize \
-                    or cursor_pos[1] < button.Y or cursor_pos[1] > button.Y + button.ysize:
-                button.Hover=False
-            else:
-                button.Hover=True
+    def quit_method(self):
+        self.running = False
+        pygame.quit()
 
     def main_menu(self):
         self.running = True
@@ -94,10 +91,31 @@ class Game:
             self.rend.main_menu()
 
             cursor_pos = pygame.mouse.get_pos()
-            self.check_cursor_hover(cursor_pos)
 
-            if self.is_close_event():
-                self.running = False
-                break
+            for button in self.buttons:
+                button.check_cursor_hover(cursor_pos)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                    pygame.quit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1 and self.rend.quitButton.Hover:
+                        self.rend.quitButton.method()
+                    elif event.button == 1 and self.rend.playButton.Hover:
+                        return self.rend.playButton.method()
+
+
+    def enter_to_lobby(self):
+        self.running = True
+        while self.running:
+            self.rend.enter_to_lobby()
+
+            cursor_pos = pygame.mouse.get_pos()
+
+            for button in self.buttons:
+                button.check_cursor_hover(cursor_pos)
+
+            self.is_close_event()
 
 

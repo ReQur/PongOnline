@@ -77,5 +77,15 @@ class Renderer:
         pygame.display.flip()
 
 
+    def enter_to_lobby(self):
+        self.screen.fill(Color.DARK_GREY_RED_BROWN)
+
+        pygame.draw.rect(self.screen, Color.WHITE,
+                         (50, 30, 700, 540), 7)
+
+
+        pygame.display.flip()
+
+
 
 

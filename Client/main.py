@@ -3,8 +3,13 @@ from game import Game
 
 def main():
     game = Game()
-    game.main_menu()
-    game.run()
+
+    Stage = game.main_menu
+
+    while True:
+        Stage = State()
+        if Stage == None:
+            break
 
 
 if __name__ == "__main__":

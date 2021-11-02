@@ -17,6 +17,8 @@ class Button:
     prevHover = False
     hovercolor = None
 
+    method = None
+
 
     def __init__(self, label, bordercolor, backgroundcolor, borderwidth, hovercolor = Color.WHITE):
         self.label = label
@@ -49,3 +51,19 @@ class Button:
             pygame.draw.rect(screen, self.bordercolor,
                              (self.X, self.Y, self.xsize, self.ysize), 7)
             screen.blit(self.label.surface, (X - labelsize[0] / 2, Y - labelsize[1] / 2))
+        elif point == 'left':
+            self.X = X
+            self.Y = Y
+            pygame.draw.rect(screen, self.backgroundcolor,
+                             (self.X, self.Y, self.xsize, self.ysize))
+            pygame.draw.rect(screen, self.bordercolor,
+                             (self.X, self.Y, self.xsize, self.ysize), 7)
+            screen.blit(self.label.surface, (X - labelsize[0] / 2, Y - labelsize[1] / 2))
+
+
+    def check_cursor_hover(self, cursor_pos):
+            if cursor_pos[0] < self.X or cursor_pos[0] > self.X + self.xsize \
+                    or cursor_pos[1] < self.Y or cursor_pos[1] > self.Y + self.ysize:
+                self.Hover = False
+            else:
+                self.Hover = True
