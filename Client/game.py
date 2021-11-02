@@ -21,11 +21,16 @@ class Game:
 
     running = None
 
+    buttons = []
+
 
 
     def __init__(self):
         pygame.init()
         self.clock = pygame.time.Clock()
+        self.rend = Renderer()
+        self.buttons.append(self.rend.quitButton)
+        self.buttons.append(self.rend.playButton)
 
 
     def __run_init(self):
@@ -33,7 +38,6 @@ class Game:
         self.playerRight = Player()
 
         self.conn = Connection('localhost')
-        self.rend = Renderer()
 
         self.point, self.playerLeft, self.playerRight = self.conn.recieve_data(self.playerLeft, self.playerRight, first_tick=True)
 
@@ -74,3 +78,26 @@ class Game:
                 pygame.quit()
                 return True
         return False
+
+
+    def check_cursor_hover(self, cursor_pos):
+        for button in self.buttons:
+            if cursor_pos[0] < button.X or cursor_pos[0] > button.X + button.xsize \
+                    or cursor_pos[1] < button.Y or cursor_pos[1] > button.Y + button.ysize:
+                button.Hover=False
+            else:
+                button.Hover=True
+
+    def main_menu(self):
+        self.running = True
+        while self.running:
+            self.rend.main_menu()
+
+            cursor_pos = pygame.mouse.get_pos()
+            self.check_cursor_hover(cursor_pos)
+
+            if self.is_close_event():
+                self.running = False
+                break
+
+
