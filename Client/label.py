@@ -15,7 +15,7 @@ class Label:
     def draw(self, screen, X, Y, point = 'left'):
         size = self.font.size(self.text)
         if point == 'center':
-            screen.blit(self.surface, (X - size[0]/2, 130))
+            screen.blit(self.surface, (X - size[0]/2, Y - size[1]/2))
 
 
     def hovered(self, hoveredcolor = color,  hover = True):

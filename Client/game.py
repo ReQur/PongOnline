@@ -28,12 +28,14 @@ class Game:
 
 
     def __run_init(self):
+
         self.playerLeft = Player()
         self.playerRight = Player()
 
-        self.conn = Connection('localhost')
-
+        self.conn = Connection(self.rend.addressBox.text if self.rend.addressBox.text != '' else 'localhost')
+        self.rend.connetion_wait()
         self.point, self.playerLeft, self.playerRight = self.conn.recieve_data(self.playerLeft, self.playerRight, first_tick=True)
+
 
         Thread(target=self.conn.send_data, args=[self.playerLeft, self.playerRight]).start()
 
@@ -92,6 +94,9 @@ class Game:
                 elif event.button == 1 and self.rend.backButton.Hover:
                     self.rend.backButton.Hover = False
                     return self.rend.backButton.method
+                elif event.button == 1 and self.rend.connectButton.Hover:
+                    self.rend.connectButton.Hover = False
+                    return self.rend.connectButton.method
 
     def quit_method(self):
         self.running = False
@@ -115,11 +120,12 @@ class Game:
             method = self.check_events()
             if method: return method
 
-
     def enter_to_lobby(self):
         buttons = []
         self.rend.backButton.method = self.main_menu
         buttons.append(self.rend.backButton)
+        self.rend.connectButton.method = self.run
+        buttons.append(self.rend.connectButton)
 
         self.running = True
         while self.running:
@@ -131,9 +137,6 @@ class Game:
                 button.check_cursor_hover(cursor_pos)
 
             self.rend.addressBox.check_cursor_hover(cursor_pos)
-
-            # for event in pygame.event.get():
-            #     self.rend.addressBox.handle_event(event)
 
             method = self.check_events()
             if method: return method
