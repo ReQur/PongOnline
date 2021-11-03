@@ -58,12 +58,13 @@ class Button:
                              (self.X, self.Y, self.xsize, self.ysize))
             pygame.draw.rect(screen, self.bordercolor,
                              (self.X, self.Y, self.xsize, self.ysize), 7)
-            screen.blit(self.label.surface, (X - labelsize[0] / 2, Y - labelsize[1] / 2))
+            screen.blit(self.label.surface, (X + labelsize[0]*0.1, Y + labelsize[1]*0.2))
 
 
     def check_cursor_hover(self, cursor_pos):
-            if cursor_pos[0] < self.X or cursor_pos[0] > self.X + self.xsize \
-                    or cursor_pos[1] < self.Y or cursor_pos[1] > self.Y + self.ysize:
-                self.Hover = False
-            else:
-                self.Hover = True
+        if self.X == None: return
+        if cursor_pos[0] < self.X or cursor_pos[0] > self.X + self.xsize \
+                or cursor_pos[1] < self.Y or cursor_pos[1] > self.Y + self.ysize:
+            self.Hover = False
+        else:
+            self.Hover = True

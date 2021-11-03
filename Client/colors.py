@@ -3,3 +3,4 @@ class Color:
     COFFEE = (68, 45, 37)
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
+    GREY = (100, 100, 100)

@@ -3,6 +3,7 @@ import pygame
 from label import Label
 from button import Button
 from colors import Color
+from textinput import TextInput
 
 class Renderer:
     screen = None
@@ -21,6 +22,10 @@ class Renderer:
     quitButton = None
     playButton = None
 
+    backButton = None
+
+    addressBox = None
+
     def __init__(self):
         self.screen = pygame.display.set_mode(self.__windowsize)
         pygame.display.set_caption(self.__windowname)
@@ -33,6 +38,9 @@ class Renderer:
 
         self.quitButton = Button(Label('Quit', Color.BLACK, self.buttonFont), Color.BLACK, Color.COFFEE, 7)
         self.playButton = Button(Label('Play', Color.BLACK, self.buttonFont), Color.BLACK, Color.COFFEE, 7)
+        self.backButton = Button(Label('Back', Color.BLACK, self.buttonFont), Color.BLACK, Color.COFFEE, 7)
+
+        self.addressBox = TextInput(self.buttonFont, Color.WHITE, Color.BLACK, placeholder='localhost', numeric=True)
 
 
 
@@ -82,6 +90,11 @@ class Renderer:
 
         pygame.draw.rect(self.screen, Color.WHITE,
                          (50, 30, 700, 540), 7)
+
+        self.backButton.draw(self.screen, 70, 50)
+
+        self.addressBox.draw(self.screen, 400, 300, 'center')
+
 
 
         pygame.display.flip()

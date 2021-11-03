@@ -7,7 +7,7 @@ def main():
     Stage = game.main_menu
 
     while True:
-        Stage = State()
+        Stage = Stage()
         if Stage == None:
             break
 

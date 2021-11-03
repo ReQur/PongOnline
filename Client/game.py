@@ -21,18 +21,10 @@ class Game:
 
     running = None
 
-    buttons = []
-
-
-
     def __init__(self):
         pygame.init()
         self.clock = pygame.time.Clock()
         self.rend = Renderer()
-        self.rend.quitButton.method = self.quit_method
-        self.rend.playButton.method = self.enter_to_lobby
-        self.buttons.append(self.rend.quitButton)
-        self.buttons.append(self.rend.playButton)
 
 
     def __run_init(self):
@@ -81,41 +73,70 @@ class Game:
                 return True
         return False
 
+    def check_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+                pygame.quit()
+                return None
+            if self.rend.addressBox.Hover or self.rend.addressBox.active:
+                self.rend.addressBox.handle_event(event)
+                self.rend.addressBox.Hover = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1 and self.rend.quitButton.Hover:
+                    self.rend.quitButton.Hover = False
+                    self.rend.quitButton.method()
+                elif event.button == 1 and self.rend.playButton.Hover:
+                    self.rend.playButton.Hover = False
+                    return self.rend.playButton.method
+                elif event.button == 1 and self.rend.backButton.Hover:
+                    self.rend.backButton.Hover = False
+                    return self.rend.backButton.method
+
     def quit_method(self):
         self.running = False
         pygame.quit()
 
     def main_menu(self):
+        buttons = []
+        self.rend.quitButton.method = self.quit_method
+        self.rend.playButton.method = self.enter_to_lobby
+        buttons.append(self.rend.quitButton)
+        buttons.append(self.rend.playButton)
         self.running = True
         while self.running:
             self.rend.main_menu()
 
             cursor_pos = pygame.mouse.get_pos()
 
-            for button in self.buttons:
+            for button in buttons:
                 button.check_cursor_hover(cursor_pos)
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-                    pygame.quit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1 and self.rend.quitButton.Hover:
-                        self.rend.quitButton.method()
-                    elif event.button == 1 and self.rend.playButton.Hover:
-                        return self.rend.playButton.method()
+            method = self.check_events()
+            if method: return method
 
 
     def enter_to_lobby(self):
+        buttons = []
+        self.rend.backButton.method = self.main_menu
+        buttons.append(self.rend.backButton)
+
         self.running = True
         while self.running:
             self.rend.enter_to_lobby()
 
             cursor_pos = pygame.mouse.get_pos()
 
-            for button in self.buttons:
+            for button in buttons:
                 button.check_cursor_hover(cursor_pos)
 
-            self.is_close_event()
+            self.rend.addressBox.check_cursor_hover(cursor_pos)
+
+            # for event in pygame.event.get():
+            #     self.rend.addressBox.handle_event(event)
+
+            method = self.check_events()
+            if method: return method
+
 
 
