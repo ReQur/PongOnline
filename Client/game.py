@@ -31,19 +31,29 @@ class Game:
 
         self.playerLeft = Player()
         self.playerRight = Player()
-
-        self.conn = Connection(self.rend.addressBox.text if self.rend.addressBox.text != '' else 'localhost')
+        try:
+            self.conn = Connection(self.rend.addressBox.text if self.rend.addressBox.text != '' else 'localhost')
+        except:
+            return  self.connection_failed
         self.rend.connetion_wait()
-        self.point, self.playerLeft, self.playerRight = self.conn.recieve_data(self.playerLeft, self.playerRight, first_tick=True)
 
+        # self.point, self.playerLeft, self.playerRight = self.conn.recieve_data(self.playerLeft, self.playerRight, first_tick=True)
+        #
+        #
+        # Thread(target=self.conn.send_data, args=[self.playerLeft, self.playerRight]).start()
 
-        Thread(target=self.conn.send_data, args=[self.playerLeft, self.playerRight]).start()
+        self.point, self.playerLeft, self.playerRight = self.conn.recieve_data(self.playerLeft, self.playerRight)
+        if self.point == None and self.playerLeft == None and self.playerRight == None:
+            return self.connection_failed
 
         self.running = True
 
 
     def run(self):
-        self.__run_init()
+        connected = self.__run_init()
+        if connected != None:
+            return connected
+
         while self.running:
             self.clock.tick(self.FPS)
 
@@ -65,7 +75,6 @@ class Game:
                     'left': self.playerLeft.move_down,
                     'right': self.playerRight.move_down
                 }[self.conn.this_client_player_side]()
-
             self.rend.run_render(self.point, self.playerLeft, self.playerRight)
 
     def is_close_event(self):
@@ -110,6 +119,7 @@ class Game:
         buttons.append(self.rend.playButton)
         self.running = True
         while self.running:
+            self.clock.tick(self.FPS)
             self.rend.main_menu()
 
             cursor_pos = pygame.mouse.get_pos()
@@ -129,6 +139,7 @@ class Game:
 
         self.running = True
         while self.running:
+            self.clock.tick(self.FPS)
             self.rend.enter_to_lobby()
 
             cursor_pos = pygame.mouse.get_pos()
@@ -140,6 +151,24 @@ class Game:
 
             method = self.check_events()
             if method: return method
+
+
+    def connection_failed(self):
+        self.running = True
+        while self.running:
+            self.clock.tick(self.FPS)
+            self.rend.connetion_failed()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                    pygame.quit()
+                    return None
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    return self.enter_to_lobby
+
+
+
 
 
 

@@ -23,7 +23,10 @@ class Connection:
         self.sock.close()
 
     def recieve_data(self, playerLeft, playerRight, first_tick=False):
-        data, _ = self.sock.recvfrom(1024)
+        try:
+            data, _ = self.sock.recvfrom(1024)
+        except ConnectionResetError:
+            return None, None, None
         if len(data) > 10:
             dataDict = json.loads(data)[0]
 

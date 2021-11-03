@@ -22,6 +22,7 @@ class Renderer:
     PongTitle = None
 
     connetionText = None
+    connetionfailedText = None
 
     quitButton = None
     playButton = None
@@ -42,6 +43,8 @@ class Renderer:
 
         self.PongTitle = Label('Pong', Color.WHITE, self.largeFont)
         self.connetionText = Label('Waiting second player', Color.WHITE, self.smallFont)
+        self.connetionfailedText = Label('Can not connect', Color.WHITE, self.smallFont)
+
 
         self.quitButton = Button(Label('Quit', Color.BLACK, self.smallFont), Color.BLACK, Color.COFFEE, 7)
         self.playButton = Button(Label('Play', Color.BLACK, self.smallFont), Color.BLACK, Color.COFFEE, 7)
@@ -118,6 +121,16 @@ class Renderer:
                          (50, 30, 700, 540), 7)
 
         self.connetionText.draw(self.screen, 400, 300, 'center')
+
+        pygame.display.flip()
+
+    def connetion_failed(self):
+        self.screen.fill(Color.DARK_GREY_RED_BROWN)
+
+        pygame.draw.rect(self.screen, Color.WHITE,
+                         (50, 30, 700, 540), 7)
+
+        self.connetionfailedText.draw(self.screen, 400, 300, 'center')
 
         pygame.display.flip()
 
