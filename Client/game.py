@@ -40,11 +40,12 @@ class Game:
         # self.point, self.playerLeft, self.playerRight = self.conn.recieve_data(self.playerLeft, self.playerRight, first_tick=True)
         #
         #
-        # Thread(target=self.conn.send_data, args=[self.playerLeft, self.playerRight]).start()
 
-        self.point, self.playerLeft, self.playerRight = self.conn.recieve_data(self.playerLeft, self.playerRight)
+        self.point, self.playerLeft, self.playerRight = self.conn.recieve_data(self.playerLeft, self.playerRight, first_tick=True)
         if self.point == None and self.playerLeft == None and self.playerRight == None:
             return self.connection_failed
+
+        Thread(target=self.conn.send_data, args=[self.playerLeft, self.playerRight]).start()
 
         self.running = True
 
